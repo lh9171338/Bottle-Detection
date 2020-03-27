@@ -1,0 +1,6 @@
+﻿  main.cpp
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(44,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(88,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(114,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(171,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
+  TrainHogSvm.vcxproj -> E:\opencv\HogSvm\TrainHogSvm\x64\Debug\TrainHogSvm.exe
