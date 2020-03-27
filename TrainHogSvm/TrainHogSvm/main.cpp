@@ -17,15 +17,17 @@ int main()
 	string trainLabelFilename = "E:/BottleDataset/classification/train/label.txt";
 	string testLabelFilename = "E:/BottleDataset/classification/test/label.txt";
 	string modelFilename = "svm-rbf.xml";
-	bool trainFlag = false;
+	bool trainFlag = true;
 	bool testFlag = true;
 
 	/******************* ≥ı ºªØ *******************/
 	HOGDescriptor hog(Size(ImageWidht, ImageHeight), Size(16, 16), Size(8, 8), Size(8, 8), 9);
 	Ptr<SVM> svm = SVM::create();
 	svm->setType(SVM::C_SVC);
+	svm->setC(1.0);
+	svm->setClassWeights(Mat(Vec2d(1.0, 1.0)));
 	svm->setKernel(SVM::RBF);
-	svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 1000, 1e-7));
+	svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 1000, 1e-7));
 
 	/******************* —µ¡∑ *******************/
 	if (trainFlag) {

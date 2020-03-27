@@ -1,11 +1,11 @@
 ﻿  main.cpp
-E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(42,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
-E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(88,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
-E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(115,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
-E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(169,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(44,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(90,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(117,30): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+E:\opencv\HogSvm\TrainHogSvm\TrainHogSvm\main.cpp(171,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
   正在生成代码
-  1 of 511 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  1 of 515 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   TrainHogSvm.vcxproj -> E:\opencv\HogSvm\TrainHogSvm\x64\Release\TrainHogSvm.exe
