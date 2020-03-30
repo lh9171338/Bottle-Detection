@@ -2,21 +2,24 @@
 #include <fstream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/ximgproc.hpp>
+#include <time.h> 
 
 using namespace std;
 using namespace cv;
 using namespace cv::ximgproc;
 
-
 int main()
 {
 	/******************* 参数 *******************/
-	string srcPath = "src/";
-	string dstPath = "dst/";
+	string srcPath = "../../Image/TestImage/";
+	string dstPath = "../../Image/EdgeBoxes/";
 	String modelFilename = "model.yml";
 	string pattern = srcPath + "*.jpg";
 	bool showFlag = false;
 	bool saveFlag = true;
+	clock_t startTime, endTime;
+	float totalTime, averageTime;
+	startTime = clock();
 
 	/******************* 初始化 *******************/
 	Ptr<StructuredEdgeDetection> pDollar = createStructuredEdgeDetection(modelFilename);
@@ -28,7 +31,6 @@ int main()
 	glob(pattern, fileList, false);
 	int numImages = (int)fileList.size();
 	for (int i = 0; i < numImages; i++) {
-
 		// 读取图片
 		string srcFilename = fileList[i];
 		Mat srcImage = imread(srcFilename);
@@ -49,11 +51,8 @@ int main()
 		vector<Rect> bboxes;
 		edgeboxes->getBoundingBoxes(_edge, _orientation, bboxes);
 		int numBboxes = (int)bboxes.size();
-		for (int j = 0; j < numBboxes; j++) {
-			Point pt1(bboxes[j].x, bboxes[j].y);
-			Point pt2(bboxes[j].x + bboxes[j].width, bboxes[j].y + bboxes[j].height);
-			rectangle(dstImage, pt1, pt2, Scalar(0, 0, 255), 2);
-		}
+		for (int j = 0; j < numBboxes; j++)
+			rectangle(dstImage, bboxes[j], Scalar(0, 0, 255), 2);
 
 		// 显示和保存
 		if (showFlag) {
@@ -61,7 +60,7 @@ int main()
 			namedWindow("dstImage", 0);
 			imshow("srcImage", srcImage);
 			imshow("dstImage", dstImage);
-			waitKey();
+			waitKey(1);
 		}
 		if (saveFlag) {
 			int pos = (int)srcFilename.find_last_of("\\") + 1;
@@ -70,6 +69,11 @@ int main()
 		}
 		cout << "Progress: " << i + 1 << "/" << numImages << endl;
 	}
+
+	endTime = clock();
+	totalTime = (endTime - startTime) / CLOCKS_PER_SEC + 0.5;
+	averageTime = totalTime / numImages;
+	cout << "Average time:\t" << averageTime << "s" << endl << endl;
 
 	return 0;
 }

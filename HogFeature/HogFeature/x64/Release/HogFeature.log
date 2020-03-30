@@ -1,0 +1,9 @@
+﻿  main.cpp
+E:\opencv\BottleDetection\HogFeature\HogFeature\main.cpp(34,29): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+E:\opencv\BottleDetection\HogFeature\HogFeature\main.cpp(81,29): warning C4267:  “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  正在生成代码
+  1 of 493 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  HogFeature.vcxproj -> E:\opencv\BottleDetection\HogFeature\x64\Release\HogFeature.exe

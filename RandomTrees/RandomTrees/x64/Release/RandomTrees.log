@@ -1,0 +1,11 @@
+﻿  main.cpp
+E:\opencv\BottleDetection\RandomTrees\RandomTrees\main.cpp(54,53): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\BottleDetection\RandomTrees\RandomTrees\main.cpp(68,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\BottleDetection\RandomTrees\RandomTrees\main.cpp(102,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
+E:\opencv\BottleDetection\RandomTrees\RandomTrees\main.cpp(105,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+  正在生成代码
+  1 of 278 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    7 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  RandomTrees.vcxproj -> E:\opencv\BottleDetection\RandomTrees\x64\Release\RandomTrees.exe
