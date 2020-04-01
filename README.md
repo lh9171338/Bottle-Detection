@@ -1,5 +1,5 @@
 # Bottle-Detection
-Bottle Detection base on "EdgeBoxes + HOG + SVM" or "EdgeBoxes + HOG + RTrees"
+Bottle Detection base on "EdgeBoxes + HOG + SVM", "EdgeBoxes + HOG + RTrees" or "EdgeBoxes + CNN"
 
 # Result  
 Detection speed is about 10 FPS  
@@ -16,3 +16,8 @@ SVM-RBF
 RTrees  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/RTrees.jpg)  
 
+CNN(PyTorch)  
+![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/PyTorch.jpg)  
+
+CNN(TensorFlow)  
+![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/TensorFlow.jpg)  
