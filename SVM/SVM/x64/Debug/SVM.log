@@ -1,0 +1,6 @@
+﻿  main.cpp
+E:\opencv\BottleDetection\SVM\SVM\main.cpp(52,53): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\BottleDetection\SVM\SVM\main.cpp(66,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+E:\opencv\BottleDetection\SVM\SVM\main.cpp(100,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
+E:\opencv\BottleDetection\SVM\SVM\main.cpp(103,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
+  SVM.vcxproj -> E:\opencv\BottleDetection\SVM\x64\Debug\SVM.exe

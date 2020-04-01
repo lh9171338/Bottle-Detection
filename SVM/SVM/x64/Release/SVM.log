@@ -4,7 +4,7 @@ E:\opencv\BottleDetection\SVM\SVM\main.cpp(66,54): warning C4244:  “=”: 从�
 E:\opencv\BottleDetection\SVM\SVM\main.cpp(100,17): warning C4244:  “=”: 从“double”转换到“float”，可能丢失数据
 E:\opencv\BottleDetection\SVM\SVM\main.cpp(103,54): warning C4244:  “=”: 从“double”转换到“clock_t”，可能丢失数据
   正在生成代码
-  2 of 284 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  1 of 284 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成

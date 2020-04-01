@@ -13,10 +13,10 @@ int main()
 	/******************* 参数 *******************/
 	string srcPath = "../../Image/TestImage/";
 	string dstPath = "../../Image/EdgeBoxes/";
-	String modelFilename = "model.yml";
-	string pattern = srcPath + "*.jpg";
-	bool showFlag = false;
-	bool saveFlag = true;
+	String modelFilename = "../../Model/model.yml";
+	string pattern = "*.jpg";
+	bool showFlag = true;
+	bool saveFlag = false;
 	clock_t startTime, endTime;
 	float totalTime, averageTime;
 	startTime = clock();
@@ -28,7 +28,7 @@ int main()
 
 	/******************* 处理所有图片 *******************/
 	vector<string> fileList;
-	glob(pattern, fileList, false);
+	glob(srcPath + pattern, fileList, false);
 	int numImages = (int)fileList.size();
 	for (int i = 0; i < numImages; i++) {
 		// 读取图片
@@ -60,7 +60,7 @@ int main()
 			namedWindow("dstImage", 0);
 			imshow("srcImage", srcImage);
 			imshow("dstImage", dstImage);
-			waitKey(1);
+			waitKey();
 		}
 		if (saveFlag) {
 			int pos = (int)srcFilename.find_last_of("\\") + 1;

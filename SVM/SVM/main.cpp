@@ -12,7 +12,7 @@ int main()
 	/******************* ²ÎÊý *******************/
 	string HogFeatureFilename = "../../Dataset/HogFeature.xml";
 	string modelFilename = "../../Model/svm-linear.xml";
-	bool trainFlag = true;
+	bool trainFlag = false;
 	bool testFlag = true;
 	int numTrain = 1000;
 	clock_t startTime, endTime, totalTime;
