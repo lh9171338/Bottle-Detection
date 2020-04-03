@@ -1,26 +1,26 @@
-# Bottle-Detection
-Bottle detection base on "EdgeBoxes + HOG + SVM", "EdgeBoxes + HOG + RTrees" or "EdgeBoxes + CNN"
+# 1. Introduction
+>>Bottle detection based on "EdgeBoxes + HOG + SVM", "EdgeBoxes + HOG + RTrees" or "EdgeBoxes + CNN".
 
-# Dataset
-Download file [[Dataser.rar]](https://media.githubusercontent.com/media/lh9171338/Bottle-Detection/master/Dataset.rar)
+# 2. Dataset
+>>Download file [[Dataser.rar]](https://media.githubusercontent.com/media/lh9171338/Bottle-Detection/master/Dataset.rar)  
 
-# Result
-Detection speed is about 10 FPS
+# 3. Result
+>>Detection speed is about 10 FPS
 
-EdgeBoxes  
+-EdgeBoxes  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/EdgeBoxes.jpg)
 
-SVM-Linear  
+-SVM-Linear  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/SVM-Linear.jpg)
 
-SVM-RBF  
+-SVM-RBF  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/SVM-RBF.jpg) 
 
-RTrees  
+-RTrees  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/RTrees.jpg)
 
-CNN(PyTorch)  
+-CNN(PyTorch)  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/PyTorch.jpg)
 
-CNN(TensorFlow)  
+-CNN(TensorFlow)  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/TensorFlow.jpg)
