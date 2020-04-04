@@ -2,29 +2,22 @@ import os
 import glob
 import random
 import numpy as np
+import argparse
 import cv2
 import tensorflow as tf
 
-# Parameter
-trainPath = '../Dataset/train'
-testPath = '../Dataset/test'
-pattern = '*.jpg'
-trainFilename = '../Dataset/train.tfrecords'
-testFilename = '../Dataset/test.tfrecords'
-ImageWidth = 64
-ImageHeight = 64
-
 
 # Save data
-def recordWriter(filename, path, pattern, shuffle=True):
+def record_writer(filename, path, pattern, image_size=None, shuffle=True):
     writer = tf.io.TFRecordWriter(filename)
-    fileList = glob.glob(os.path.join(path, pattern))
-    numFiles = len(fileList)
+    file_list = glob.glob(os.path.join(path, pattern))
+    num_files = len(file_list)
     if shuffle:
-        random.shuffle(fileList)
-    for i, filename in enumerate(fileList):
+        random.shuffle(file_list)
+    for i, filename in enumerate(file_list):
         image = cv2.imread(filename)
-        image = cv2.resize(image, (ImageWidth, ImageHeight))
+        if image_size is not None:
+            image = cv2.resize(image, image_size)
         label = np.array([0])
         if filename.find('Pos') >= 0:
             label = np.array([1])
@@ -35,14 +28,28 @@ def recordWriter(filename, path, pattern, shuffle=True):
         }))
         writer.write(example.SerializeToString())
 
-        print('Progress: %s %d %d / %d' % (filename, label, i, numFiles))
+        print('Progress: %s %d %d / %d' % (filename, label, i, num_files))
     writer.close()
 
 
 if __name__ == '__main__':
+    # Parameter
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--train_path', type=str, default='../Dataset/train', help='path for tran data: give a string')
+    parser.add_argument('--test_path', type=str, default='../Dataset/test', help='path for test data: give a string')
+    parser.add_argument('--pattern', type=str, default='*.jpg', help='image pattern: give a string')
+    parser.add_argument('--train_filename', type=str, default='../Dataset/train.tfrecords',
+                        help='tfrecords filename for tran data: give a string')
+    parser.add_argument('--test_filename', type=str, default='../Dataset/test.tfrecords',
+                        help='tfrecords filename for test data: give a string')
+    args = parser.parse_args()
+
+    image_size = (64, 64)  # image size for resizing
 
     # Save train data
-    recordWriter(trainFilename, trainPath, pattern, shuffle=True)
+    record_writer(filename=args.train_filename, path=args.train_path, pattern=args.pattern, image_size=image_size,
+                  shuffle=True)
 
     # Save test data
-    recordWriter(testFilename, testPath, pattern, shuffle=True)
+    record_writer(filename=args.test_filename, path=args.test_path, pattern=args.pattern, image_size=image_size,
+                  shuffle=True)

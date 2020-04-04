@@ -1,31 +1,22 @@
 import os
 import glob
 import numpy as np
+from datetime import datetime
 import cv2
 import torch
 import torch.nn as nn
 import torch.utils.data as Data
-
-# Parameter
-trainPath = '../Dataset/train'
-testPath = '../Dataset/test'
-modelFilename = '../Model/bottleNet.pkl'
-batchSize = 128
-numEpochs = 10
-stepSize = 5
-LR = 1e-4
-trainFlag = False
-testFlag = True
+from tensorboardX import SummaryWriter
 
 
 # Load data
 class BottleDataset(Data.Dataset):
-    def __init__(self, root, augment=None):
-        self.fileList = glob.glob(os.path.join(root, '*.jpg'))
+    def __init__(self, path, pattern, augment=None):
+        self.file_list = glob.glob(os.path.join(path, pattern))
         self.augment = augment
 
     def __getitem__(self, index):
-        filename = self.fileList[index]
+        filename = self.file_list[index]
         image = cv2.imread(filename)
         image = cv2.resize(image, (64, 64))
         image = np.transpose(image, [2, 0, 1])
@@ -37,7 +28,7 @@ class BottleDataset(Data.Dataset):
         return image, label
 
     def __len__(self):
-        return len(self.fileList)
+        return len(self.file_list)
 
 
 # Define network
@@ -61,103 +52,128 @@ class Model(nn.Module):
         return y
 
 
+def train_net(train_path, pattern, model_filename, log_path, batch_size, num_epochs, step_size, lr, device):
+    # Create model
+    model = Model().to(device)
+    print(model)
+    optimizer = torch.optim.RMSprop(model.parameters(), lr=lr, alpha=0.9)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size, gamma=0.1)
+    loss_func = torch.nn.BCEWithLogitsLoss()
+
+    # Summary
+    writer = SummaryWriter(log_path)
+    model_input = torch.rand(batch_size, 3, 64, 64).to(device)
+    writer.add_graph(model, (model_input,))
+
+    # Creating data loader
+    dataset = BottleDataset(train_path, pattern)
+    loader = Data.DataLoader(
+        dataset=dataset,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    total_correct = 0
+    total_loss = 0
+    total_num = 0
+    step = 0
+    for epoch in range(num_epochs):
+        for image_batch, label_batch in loader:
+            image_batch = torch.FloatTensor(image_batch).to(device)
+            label_batch = torch.FloatTensor(label_batch).to(device)
+            outputs = model(image_batch)
+            outputs = torch.squeeze(outputs, -1)
+            labels = torch.squeeze(label_batch, -1)
+
+            loss = loss_func(outputs, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            logical_outputs = outputs.cpu().detach().numpy() > 0
+            logical_labels = labels.cpu().detach().numpy() > 0.5
+            total_correct += np.sum(logical_outputs == logical_labels)
+            total_loss += loss.cpu().detach().numpy()
+            total_num += logical_labels.shape[0]
+            if step % 50 == 0:
+                accuracy = float(total_correct) / float(total_num)
+                avg_loss = float(total_loss) / float(total_num)
+                total_correct = 0
+                total_loss = 0
+                total_num = 0
+                print('Epoch: ', epoch + 1, '| train loss: %.6f' % avg_loss, '| train accuracy: %.4f' % accuracy)
+
+                writer.add_images('image', image_batch[0:3], step)
+                writer.add_scalar('loss', avg_loss, step)
+                writer.add_scalar('accuracy', accuracy, step)
+            step += 1
+
+        scheduler.step()
+
+    writer.close()
+
+    # Save model
+    torch.save(model.cpu(), model_filename)
+
+
+def test_net(test_path, pattern, model_filename, batch_size, device):
+    # Load model
+    model = torch.load(model_filename).to(device)
+    print(model)
+
+    # Creating data loader
+    dataset = BottleDataset(test_path, pattern)
+    loader = Data.DataLoader(
+        dataset=dataset,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    pos_error = 0
+    neg_error = 0
+    total_num = 0
+    for image_batch, label_batch in loader:
+        image_batch = torch.FloatTensor(image_batch).to(device)
+        label_batch = torch.FloatTensor(label_batch).to(device)
+        outputs = model(image_batch)
+        outputs = torch.squeeze(outputs, -1)
+        labels = torch.squeeze(label_batch, -1)
+
+        logical_outputs = outputs.cpu().detach().numpy() > 0
+        logical_labels = labels.cpu().detach().numpy() > 0.5
+        pos_error += np.sum(np.logical_and(logical_outputs != logical_labels, logical_labels == True))
+        neg_error += np.sum(np.logical_and(logical_outputs != logical_labels, logical_labels == False))
+        total_num += logical_labels.shape[0]
+
+    total_error = pos_error + neg_error
+    accuracy = 1 - float(total_error) / float(total_num)
+    print('positive error: ', pos_error)
+    print('negative error: ', neg_error)
+    print('accuracy: %.4f' % accuracy)
+
+
 if __name__ == '__main__':
+    # Parameter
+    train_path = '../Dataset/train'
+    test_path = '../Dataset/test'
+    pattern = '*.jpg'
+    model_filename = '../Model/bottleNet.pkl'
+    log_path = 'log/{}'.format(datetime.now().strftime("%Y%m%d-%H%M"))
+    batch_size = 128
+    num_epochs = 10
+    step_size = 5
+    lr = 1e-4
+    train_flag = True
+    test_flag = True
 
     use_gpu = torch.cuda.is_available()
+    device = torch.device("cuda:0" if use_gpu else "cpu")
     print('use_gpu: ', use_gpu)
 
     # Training network
-    if trainFlag:
-        # Create model
-        model = Model()
-        if use_gpu:
-            model = model.cuda()
-        print(model)
-        # optimizer = torch.optim.Adam(model.parameters(), lr=LR, betas=(0.9, 0.99))
-        optimizer = torch.optim.RMSprop(model.parameters(), lr=LR, alpha=0.9)
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, stepSize, gamma=0.1)
-        lossFunc = torch.nn.BCEWithLogitsLoss()
-
-        # Creating data loader
-        trainDataset = BottleDataset(trainPath)
-        trainLoader = Data.DataLoader(
-            dataset=trainDataset,
-            batch_size=batchSize,
-            shuffle=True
-        )
-
-        totalCorrect = 0
-        totalLoss = 0
-        totalNum = 0
-        for epoch in range(numEpochs):
-            for step, (batchX, batchY) in enumerate(trainLoader):
-                batchX = torch.FloatTensor(batchX)
-                batchY = torch.FloatTensor(batchY)
-                if use_gpu:
-                    batchX = batchX.cuda()
-                    batchY = batchY.cuda()
-                output = model(batchX)
-                output = torch.squeeze(output, -1)
-                batchY = torch.squeeze(batchY, -1)
-                loss = lossFunc(output, batchY)
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-
-                predY = output.cpu().detach().numpy() > 0
-                trueY = batchY.cpu().detach().numpy() > 0.5
-                totalCorrect += np.sum(predY == trueY)
-                totalLoss += loss.cpu().detach().numpy()
-                totalNum += batchX.shape[0]
-                if step % 50 == 0:
-                    accuracy = float(totalCorrect) / float(totalNum)
-                    avgLoss = float(totalLoss) / float(totalNum)
-                    totalCorrect = 0
-                    totalLoss = 0
-                    totalNum = 0
-                    print('Epoch: ', epoch + 1, '| train loss: %.6f' % avgLoss, '| train accuracy: %.4f' % accuracy)
-            scheduler.step()
-
-        # Save model
-        torch.save(model.cpu(), modelFilename)
+    if train_flag:
+        train_net(train_path, pattern, model_filename, log_path, batch_size, num_epochs, step_size, lr, device)
 
     # Test
-    if testFlag:
-        # Load model
-        model = torch.load(modelFilename)
-        if use_gpu:
-            model = model.cuda()
-        print(model)
-
-        # Creating data loader
-        testDataset = BottleDataset(testPath)
-        testLoader = Data.DataLoader(
-            dataset=testDataset,
-            batch_size=batchSize,
-            shuffle=False
-        )
-
-        posError = 0
-        negError = 0
-        totalError = 0
-        totalNum = 0
-        for batchX, batchY in testLoader:
-            batchX = torch.FloatTensor(batchX)
-            batchY = torch.FloatTensor(batchY)
-            if use_gpu:
-                batchX = batchX.cuda()
-                batchY = batchY.cuda()
-            output = model(batchX)
-            output = torch.squeeze(output, -1)
-            batchY = torch.squeeze(batchY, -1)
-            predY = output.cpu().detach().numpy() > 0
-            trueY = batchY.cpu().detach().numpy() > 0.5
-            posError += np.sum(np.logical_and(predY != trueY, trueY == True))
-            negError += np.sum(np.logical_and(predY != trueY, trueY == False))
-            totalNum += batchX.shape[0]
-
-        totalError = posError + negError
-        accuracy = 1 - float(totalError) / float(totalNum)
-        print('posError: ', posError)
-        print('negError: ', negError)
-        print('accuracy: %.4f' % accuracy)
+    if test_flag:
+        test_net(test_path, pattern, model_filename, batch_size, device)
