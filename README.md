@@ -1,3 +1,6 @@
+[<img height="23" src="https://github.com/lh9171338/Outline/blob/master/icon.jpg"/>](https://github.com/lh9171338/Outline) Bottle Detection
+===
+
 # 1. Introduction
 >>Bottle detection based on "EdgeBoxes + HOG + SVM", "EdgeBoxes + HOG + RTrees" or "EdgeBoxes + CNN".
 
@@ -22,6 +25,3 @@
 
 - CNN(TensorFlow)  
 ![image](https://github.com/lh9171338/Bottle-Detection/blob/master/Image/Result/TensorFlow.jpg)
-
-# 4. More Resources
-- [Github Link](https://github.com/lh9171338/Outline)
